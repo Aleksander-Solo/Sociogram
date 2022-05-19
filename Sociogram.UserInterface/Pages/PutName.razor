@@ -1,0 +1,16 @@
+﻿@page "/putName/{code:int}"
+
+<Card style="width: 489px; height: 380px; border: solid #57024e 2px; margin:auto; margin-top: 70px;"> 
+    <h2 style="margin: auto;">Wpisz imie</h2>
+    <hr/>
+    <input @bind-value="name" type="text"/>
+    <input @bind-value="nr" type="number"/>
+</Card>
+
+@code {
+    [Parameter]
+    public int code { get; set; }
+
+    string name;
+    int nr;
+}
