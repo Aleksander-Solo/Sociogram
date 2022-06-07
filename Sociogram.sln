@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sociogram.UserInterface", "Sociogram.UserInterface\Sociogram.UserInterface.csproj", "{A9718A2B-219A-44FA-B96B-6F635746ED63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sociogram.DAL", "Sociogram.DAL\Sociogram.DAL.csproj", "{8DE2187C-163B-4E7D-A6FB-F9529BA7F4F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sociogram.DAL", "Sociogram.DAL\Sociogram.DAL.csproj", "{8DE2187C-163B-4E7D-A6FB-F9529BA7F4F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

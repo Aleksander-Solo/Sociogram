@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sociogram.DAL;
 
@@ -10,9 +11,10 @@ using Sociogram.DAL;
 namespace Sociogram.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220607172046_update")]
+    partial class update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,24 +36,19 @@ namespace Sociogram.DAL.Migrations
                     b.ToTable("QuizStudent");
                 });
 
-            modelBuilder.Entity("Sociogram.DAL.Entities.ClassS", b =>
+            modelBuilder.Entity("QuizStudentConst", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("QuizzesId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TeacherId")
+                    b.Property<int>("StudentsConstId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("QuizzesId", "StudentsConstId");
 
-                    b.HasIndex("TeacherId");
+                    b.HasIndex("StudentsConstId");
 
-                    b.ToTable("ClassS");
+                    b.ToTable("QuizStudentConst");
                 });
 
             modelBuilder.Entity("Sociogram.DAL.Entities.Quiz", b =>
@@ -63,8 +60,9 @@ namespace Sociogram.DAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("ClassSId")
-                        .HasColumnType("int");
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
@@ -76,8 +74,6 @@ namespace Sociogram.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassSId");
 
                     b.HasIndex("TeacherId");
 
@@ -121,9 +117,6 @@ namespace Sociogram.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ClassSId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -132,8 +125,6 @@ namespace Sociogram.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassSId");
 
                     b.ToTable("StudentConst");
                 });
@@ -175,56 +166,34 @@ namespace Sociogram.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Sociogram.DAL.Entities.ClassS", b =>
+            modelBuilder.Entity("QuizStudentConst", b =>
                 {
-                    b.HasOne("Sociogram.DAL.Entities.Teacher", "Teacher")
-                        .WithMany("Classes")
-                        .HasForeignKey("TeacherId")
+                    b.HasOne("Sociogram.DAL.Entities.Quiz", null)
+                        .WithMany()
+                        .HasForeignKey("QuizzesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Teacher");
+                    b.HasOne("Sociogram.DAL.Entities.StudentConst", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsConstId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Sociogram.DAL.Entities.Quiz", b =>
                 {
-                    b.HasOne("Sociogram.DAL.Entities.ClassS", "ClassS")
-                        .WithMany()
-                        .HasForeignKey("ClassSId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Sociogram.DAL.Entities.Teacher", "Teacher")
                         .WithMany("Quizzes")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ClassS");
-
                     b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("Sociogram.DAL.Entities.StudentConst", b =>
-                {
-                    b.HasOne("Sociogram.DAL.Entities.ClassS", "ClassS")
-                        .WithMany("StudentsConst")
-                        .HasForeignKey("ClassSId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClassS");
-                });
-
-            modelBuilder.Entity("Sociogram.DAL.Entities.ClassS", b =>
-                {
-                    b.Navigation("StudentsConst");
                 });
 
             modelBuilder.Entity("Sociogram.DAL.Entities.Teacher", b =>
                 {
-                    b.Navigation("Classes");
-
                     b.Navigation("Quizzes");
                 });
 #pragma warning restore 612, 618

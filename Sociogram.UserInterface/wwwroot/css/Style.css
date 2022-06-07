@@ -1,0 +1,77 @@
+﻿.box input[type = "password"], .box input[type="text"] {
+    border: 0;
+    background: none;
+    background-color: white;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #57024e;
+    padding: 14px 10px;
+    width: 210px;
+    outline: none;
+    color: #57024e;
+    border-radius: 22px;
+    transition: 0.25s;
+    font-size: 14px;
+}
+
+    .box input[type = "text"]:focus, .box input[type = "password"]:focus {
+        width: 290px;
+        border-color: #16a122;
+    }
+
+.box input[type = "submit"] {
+    border: 0;
+    background: none;
+    background-color: #8a0f7d;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #57024e;
+    padding: 14px 10px;
+    width: 260px;
+    outline: none;
+    color: white;
+    border-radius: 22px;
+    transition: 0.25s;
+    font-size: 16px;
+}
+
+    .box input[type = "submit"]:hover {
+        background-color: #57024e;
+    }
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #5907ab;
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #5907ab;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: #5907ab;
+}
+
+.joinCode{
+    padding: 30px;
+    width: 400px;
+    margin: auto;
+    border: black 4px solid;
+    text-align: center;
+    font-size: 45px;
+    font-weight: 700; 
+}
+
+.Student{
+    width: 200px;
+    margin: 20px;
+    border: black solid 3px;
+    padding: 10px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.NameOfStudent {
+}

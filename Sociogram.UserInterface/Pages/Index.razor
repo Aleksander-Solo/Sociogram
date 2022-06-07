@@ -1,5 +1,10 @@
 ﻿@page "/"
 @inject NavigationManager navigationManager
+@using Sociogram.UserInterface.Auth
+@inject IQuizService quizService
+@inject AuthenticationStateProvider authenticationProvider
+@using Sociogram.DAL.Repositiores.Interfaces
+@inject IHttpContextAccessor httpContextAccesor
 
 <PageTitle>Home</PageTitle>
 <div style="margin: 20px; width: 100%; margin-top: 75px;">
@@ -10,24 +15,53 @@
             <p style="font-size: 18px;">Aplikacja "Socjogram" służy do badania relacji klasy</p>
             Dołącz do Badania: <input @bind="code" type="number"/>  
             <Button Color="Color.Primary" onclick="@JoinToQuiz">Dołącz</Button>
+            <AuthorizeView>
+                <Authorized>
+                    <br/>
+                    <h4>Hello : @context.User.Identity.Name</h4>
+                    <h5>Dodaj klase <Button Color="Color.Secondary" @onclick="AddNewClass">Dodaj nową klase</Button></h5>
+                </Authorized>
+                <NotAuthorized>
+
+                </NotAuthorized>
+            </AuthorizeView>
         </Column>
         <Column ColumnSize="ColumnSize.Is4">
-                    <Button Color="Color.Primary" >Primary</Button>
-            <Button Color="Color.Secondary" >Secondary</Button>
-            <Button Color="Color.Success" >Success</Button>
-            <Button Color="Color.Warning" >Warning</Button>
-            <Button Color="Color.Danger" >Danger</Button>
-            <Button Color="Color.Info" >Info</Button>
-            <Button Color="Color.Light" >Light</Button>
-            <Button Color="Color.Dark" >Dark</Button>
+            <AuthorizeView>
+                <Authorized>
+                    <h3>Twoje badania:</h3>
+                    <Button Color=Color.Primary @onclick="NewQuiz">Nowe Badanie</Button>
+                    @foreach(Quiz quiz in Quizzes)
+                    {
+                        <h5> - @quiz.Active - @quiz.JoinCode <Button Color="Color.Primary">Dezaktywuj</Button></h5>
+                    }
+                </Authorized>
+            </AuthorizeView>
         </Column>
     </Row>
 </div>
 @code{
     int code = 0;
+    List<Quiz> Quizzes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authstate = await ((CustomAuthenticationStateProvider)authenticationProvider).GetAuthenticationStateAsync();
+        var user = authstate.User;
+        string name = user.Identity.Name;
+        Quizzes = quizService.GetQuizzes(name);
+    }
 
     public void JoinToQuiz()
     {
         navigationManager.NavigateTo($"putName/{code}");
+    }
+    public void NewQuiz()
+    {
+        navigationManager.NavigateTo("createQuiz");
+    }
+    public void AddNewClass()
+    {
+        navigationManager.NavigateTo("newclass");
     }
 }

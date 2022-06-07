@@ -1,0 +1,37 @@
+﻿@page "/waitingroom/{joinCode:int}"
+
+<Div Style="margin-top: 100px;">
+    <Div Class="joinCode">
+    @joinCode
+    </Div>
+    <Row>
+        <Column ColumnSize="ColumnSize.Is12">
+            @foreach(Student student in Students)
+            {
+                <Div Class="Student">
+                    <Div Class="NameOfStudent">
+                        @student.Name
+                    </Div>
+                    <Div Class="Icon">
+                        X
+                    </Div>
+                </Div>
+            }
+        </Column>
+    </Row>
+</Div>
+
+
+@code {
+    [Parameter]
+    public int joinCode { get; set; }
+
+    List<Student> Students = new List<Student>();
+
+    protected override void OnInitialized()
+    {
+        Students.Add(new Student { Name = "Jan Kowalski" });
+        Students.Add(new Student { Name = "Adam Piast" });
+
+    }
+}

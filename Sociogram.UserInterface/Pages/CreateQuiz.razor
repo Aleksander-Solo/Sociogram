@@ -1,0 +1,40 @@
+﻿@page "/createQuiz"
+@using Sociogram.DAL.Repositiores.Interfaces
+@using Sociogram.UserInterface.Auth
+@inject IQuizService quizService
+@inject AuthenticationStateProvider authenticationProvider
+@inject NavigationManager navigationManager
+
+<Card style="width: 469px; height: 280px; border: solid #57024e 2px; margin:auto; margin-top: 70px;">
+        <CardHeader>
+            <h3 style="text-align: center;">Nowe Badanie</h3>
+        </CardHeader>
+    <CardBody>
+    <EditForm Model="Quiz" OnValidSubmit="@Post">
+        @*<InputText @bind-Value="Quiz.ClassName" placeholder="Wpisz klase" style="font-size:17px;"></InputText>*@
+        <Button Color="Color.Primary" Type="ButtonType.Submit" style="float: right; margin: 5px; margin-top: 15px;">Utwórz</Button>
+    </EditForm>
+    <br />
+    <br />
+    <br />
+    <br />
+    <CardFooter>
+        <p>Po utworzeniu pokaże się kod dołączenia w poczekalni.</p>
+    </CardFooter>
+    </CardBody>
+</Card>
+
+@code {
+    Quiz Quiz = new();
+
+    public async Task Post()
+    {
+        var authstate = await ((CustomAuthenticationStateProvider)authenticationProvider).GetAuthenticationStateAsync();
+        var user = authstate.User;
+        string name = user.Identity.Name;
+        Random random = new Random();
+        Quiz.JoinCode = random.Next(1000, 9999);
+        quizService.CreateQuiz(Quiz, name);
+        navigationManager.NavigateTo($"waitingroom/{Quiz.JoinCode}");
+    }
+}

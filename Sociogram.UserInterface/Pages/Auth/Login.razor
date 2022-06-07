@@ -1,0 +1,46 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.Identity
+@using Sociogram.DAL.Repositiores.Interfaces
+@using Sociogram.UserInterface.Auth
+@inject ITeacherService teacherService
+@inject AuthenticationStateProvider authenticationProvider
+@inject NavigationManager navigationManager
+@inject IPasswordHasher<Teacher> passwordHasher
+
+<Card style="width: 469px; height: 380px; border: solid #57024e 2px; margin:auto; margin-top: 70px;">
+        <CardHeader>
+            <h3 style="text-align: center;">Logowanie</h3>
+        </CardHeader>
+    <CardBody>
+    <Div Class="box">
+        <input @bind-value="Password" placeholder="Wpisz Hasło" type="password"/>
+        <input @bind-value="Name" placeholder="Wpisz Name" type="text"/>
+        <input @onclick="Authenticat" type="submit" value="Zaloguj">
+    </Div>
+    </CardBody>
+</Card>
+
+
+@code {
+    public string Password { get; set; }
+    public string Name { get; set; }
+
+    public async Task Authenticat()
+    {
+        var userAccount = teacherService.Get(Name);
+        if(userAccount is not null)
+        {
+            var result = passwordHasher.VerifyHashedPassword(userAccount, userAccount.HashedPassword, Password);
+            if(result == PasswordVerificationResult.Success)
+            {
+                var customAuthenticationProvider = (CustomAuthenticationStateProvider)authenticationProvider;
+                await customAuthenticationProvider.UpdateAuthenticationStateAsync(new UserSession
+                {
+                    Name = Name,
+                    Email = Name
+                });
+                navigationManager.NavigateTo("/", true);
+            }
+        }
+    }
+}

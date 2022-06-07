@@ -1,12 +1,21 @@
 ﻿@inherits LayoutComponentBase
-
+@inject NavigationManager navigationManager
+@using Sociogram.UserInterface.Auth
+@inject AuthenticationStateProvider authenticationProvider
 <PageTitle>Sociogram.UserInterface</PageTitle>
 
 <Layout>
     <LayoutHeader Style="height: 55px; background-color: #57024e; padding: 10px;" Fixed>
             <Div Style="font-size: 26px; color: white; margin-left: 10px; float: left;">Socjogram</Div>
-            <Button Color="Color.Info" Outline Style="font-size: 12px; margin-right: 10px; float:right;">Zaloguj</Button>
-            <Button Color="Color.Light" Outline Style="font-size: 12px; margin-right: 5px; float:right;">Zarejestruj</Button>
+            <AuthorizeView>
+                <Authorized>
+                    <Button @onclick="LogoutTeacher" Style="font-size: 12px; margin-right: 10px; float:right;" Color="Color.Info" Outline>Wyloguj</Button><h6 style="font-size: 14px; margin-right: 10px; float:right; color: white;">@context.User.Identity.Name </h6>
+                </Authorized>
+                <NotAuthorized>
+                    <Button Color="Color.Info" Outline Style="font-size: 12px; margin-right: 10px; float:right;" onclick="@login">Zaloguj</Button>
+                    <Button Color="Color.Light" Outline Style="font-size: 12px; margin-right: 5px; float:right;" onclick="@register">Zarejestruj</Button>
+                </NotAuthorized>
+            </AuthorizeView>
     </LayoutHeader>
     <LayoutContent Background="Background.Body">
         @Body
@@ -15,3 +24,22 @@
         Footer
     </LayoutFooter>
 </Layout>
+
+@code{
+    void register()
+    {
+        navigationManager.NavigateTo("register");
+    }
+
+    void login()
+    {
+        navigationManager.NavigateTo("login");
+    }
+
+    public async Task LogoutTeacher()
+    {
+        var auth = (CustomAuthenticationStateProvider)authenticationProvider;
+        await auth.UpdateAuthenticationStateAsync(null);
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,27 @@
+﻿@page "/register"
+@using Sociogram.DAL.Repositiores.Interfaces
+@inject ITeacherService teacherService
+
+<Card style="width: 469px; height: 380px; border: solid #57024e 2px; margin:auto; margin-top: 70px;">
+        <CardHeader>
+            <h3 style="text-align: center;">Rejestracja</h3>
+        </CardHeader>
+    <CardBody>
+    <Div Class="box">
+        <input @bind-value="Password" placeholder="Wpisz Hasło" type="password"/>
+        <input @bind-value="Name" placeholder="Wpisz Imie i Nazwisko" type="text"/>
+        <input @onclick="RegisterTeatcher" type="submit" value="Zarejestruj">
+    </Div>
+    </CardBody>
+</Card>
+
+@code{
+    public string Name { get; set; }
+    public string Password { get; set; }
+
+    public void RegisterTeatcher()
+    {
+        Teacher teacher = new Teacher() { Name = Name, HashedPassword = Password };
+        teacherService.Create(teacher);
+    }
+}

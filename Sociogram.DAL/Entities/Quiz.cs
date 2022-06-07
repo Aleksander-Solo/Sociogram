@@ -13,7 +13,7 @@ namespace Sociogram.DAL.Entities
         public int TeacherId { get; set; }
         public List<Student> Students { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string ClassName { get; set; }
+        public ClassS ClassS { get; set; }
         public int JoinCode { get; set; }
         public bool Active { get; set; }
     }

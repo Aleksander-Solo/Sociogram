@@ -1,0 +1,42 @@
+﻿@page "/newclass"
+
+<Card style="width: 469px; height: 880px; border: solid #57024e 2px; margin:auto; margin-top: 70px;">
+        <CardHeader>
+            <h3 style="text-align: center;">Nowe Badanie</h3>
+        </CardHeader>
+    <CardBody>
+    <EditForm Model="Students" OnValidSubmit="@Post">
+            @for (int i = 0; i < Students.Count - 1; i++)
+            {
+                 <InputText @bind-Value="Students[i].Name" placeholder="Wpisz Imie" style="font-size:17px;"></InputText>
+                 <input @bind-value="Students[i].Nr" placeholder="Wpisz numer"  type="number" style="font-size:17px;"/>  
+            }
+            <Button @onclick="AddStudent">Dodaj ucznia</Button>
+        <Button Color="Color.Primary" Type="ButtonType.Submit" style="float: right; margin: 5px; margin-top: 15px;">Utwórz</Button>
+    </EditForm>
+    <br />
+    <br />
+    <br />
+    <br />
+    <CardFooter>
+        <p>Po utworzeniu pokaże się kod dołączenia w poczekalni.</p>
+    </CardFooter>
+    </CardBody>
+</Card>
+@code {
+    public List<StudentConst> Students { get; set; } = new List<StudentConst>();
+
+    protected override void OnInitialized()
+    {
+        Students.Add(new StudentConst { });
+        Console.WriteLine(Students[0]);
+    }
+    public void Post()
+    {
+
+    }
+    public void AddStudent()
+    {
+        Students.Add(new StudentConst());
+    }
+}
