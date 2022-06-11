@@ -6,42 +6,55 @@
 @using Sociogram.DAL.Repositiores.Interfaces
 @inject IHttpContextAccessor httpContextAccesor
 
-<PageTitle>Home</PageTitle>
-<div style="margin: 20px; width: 100%; margin-top: 75px;">
+<PageTitle>Sociogram</PageTitle>
+<Container Fluid Style="margin-top: 65px;">
     <Row>
-        <Column ColumnSize="ColumnSize.Is8">
+        <Column ColumnSize="ColumnSize.Is9">
             <h3>Witaj w aplikacji Socjogram</h3>
 
             <p style="font-size: 18px;">Aplikacja "Socjogram" służy do badania relacji klasy</p>
-            Dołącz do Badania: <input @bind="code" type="number"/>  
-            <Button Color="Color.Primary" onclick="@JoinToQuiz">Dołącz</Button>
+            <Div class="joinPanel">
+                <p class="joinTxt">Dołącz do Badania: </p><input @bind-value="code" type="number" class="joinBtn" placeholder="0000"/>
+                <Button Color="Color.Primary" onclick="@JoinToQuiz" Style="font-size: 20px; padding: 15px; height: 45px; width: 100%;">Dołącz</Button>
+            </Div>
             <AuthorizeView>
                 <Authorized>
                     <br/>
                     <h4>Hello : @context.User.Identity.Name</h4>
-                    <h5>Dodaj klase <Button Color="Color.Secondary" @onclick="AddNewClass">Dodaj nową klase</Button></h5>
+                    <Card Style="margin: 10px;">
+                        <CardHeader>
+                            <h5>Dodaj klase <Button Color="Color.Secondary" @onclick="AddNewClass" Style="float: right;">Dodaj nową klase</Button></h5>
+                        </CardHeader>
+                    </Card>
+                    
                 </Authorized>
                 <NotAuthorized>
 
                 </NotAuthorized>
             </AuthorizeView>
         </Column>
-        <Column ColumnSize="ColumnSize.Is4">
+        <Column ColumnSize="ColumnSize.IsAuto">
             <AuthorizeView>
                 <Authorized>
-                    <h3>Twoje badania:</h3>
-                    <Button Color=Color.Primary @onclick="NewQuiz">Nowe Badanie</Button>
-                    @foreach(Quiz quiz in Quizzes)
-                    {
-                        <h5> - @quiz.Active - @quiz.JoinCode <Button Color="Color.Primary">Dezaktywuj</Button></h5>
-                    }
+                    <Card Style="max-width: 330px;">
+                        <CardHeader>
+                            <h4>Twoje badania:</h4>
+                        </CardHeader>
+                        <CardBody>
+                            <Button Color=Color.Primary @onclick="NewQuiz" Style="width: 100%; margin-bottom: 6px;">Nowe Badanie</Button>
+                            @foreach(Quiz quiz in Quizzes)
+                            {
+                                <h5>@quiz.ClassS.Name - @quiz.Active - @quiz.JoinCode <Button Color="Color.Info">Info</Button></h5>
+                            }
+                        </CardBody>
+                    </Card>
                 </Authorized>
             </AuthorizeView>
         </Column>
     </Row>
-</div>
+</Container>
 @code{
-    int code = 0;
+    int code;
     List<Quiz> Quizzes = new();
 
     protected override async Task OnInitializedAsync()

@@ -16,7 +16,9 @@ namespace Sociogram.DAL
         }
 
         public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<ClassS> ClassS { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<StudentConst> StudentConst { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -11,5 +11,7 @@ namespace Sociogram.DAL.Repositiores.Interfaces
     {
         public void Create(Teacher teacher);
         public Teacher Get(string name);
+        public void AddStudentConst(List<StudentConst> studentConstList, string name, string teatcherName);
+        public List<ClassS> GetClassS(string teacherName);
     }
 }

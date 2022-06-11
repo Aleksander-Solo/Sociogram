@@ -14,6 +14,7 @@ namespace Sociogram.DAL.Entities
         public List<Student> Students { get; set; }
         public DateTime CreatedDate { get; set; }
         public ClassS ClassS { get; set; }
+        public int ClassSId { get; set; }
         public int JoinCode { get; set; }
         public bool Active { get; set; }
     }

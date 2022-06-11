@@ -18,6 +18,15 @@ namespace Sociogram.DAL.Repositiores
             dbContext = _dbContext;
             _passwordHasher = passwordHasher;
         }
+
+        public void AddStudentConst(List<StudentConst> studentConstList, string name, string teatcherName)
+        {
+            Teacher teacher = dbContext.Teachers.Single(x => x.Name == teatcherName);
+            dbContext.ClassS.Add(new ClassS { Name =name, StudentsConst = studentConstList , Teacher = teacher});
+            //dbContext.StudentConst.AddRange(studentConstList);
+            dbContext.SaveChanges();
+        }
+
         public void Create(Teacher teacher)
         {
             teacher.CreatedDate = DateTime.Now;
@@ -29,6 +38,12 @@ namespace Sociogram.DAL.Repositiores
         public Teacher Get(string name)
         {
             return dbContext.Teachers.SingleOrDefault(x => x.Name == name);
+        }
+
+        public List<ClassS> GetClassS(string teacherName)
+        {
+            int teacherId = dbContext.Teachers.Single(x => x.Name == teacherName).Id;
+            return dbContext.ClassS.Where(x => x.TeacherId == teacherId).ToList();
         }
     }
 }

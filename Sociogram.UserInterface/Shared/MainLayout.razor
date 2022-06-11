@@ -2,11 +2,11 @@
 @inject NavigationManager navigationManager
 @using Sociogram.UserInterface.Auth
 @inject AuthenticationStateProvider authenticationProvider
-<PageTitle>Sociogram.UserInterface</PageTitle>
+<PageTitle>Sociogram</PageTitle>
 
 <Layout>
     <LayoutHeader Style="height: 55px; background-color: #57024e; padding: 10px;" Fixed>
-            <Div Style="font-size: 26px; color: white; margin-left: 10px; float: left;">Socjogram</Div>
+            <Div Class="IconHead"><a href="/">Socjogram</a></Div>
             <AuthorizeView>
                 <Authorized>
                     <Button @onclick="LogoutTeacher" Style="font-size: 12px; margin-right: 10px; float:right;" Color="Color.Info" Outline>Wyloguj</Button><h6 style="font-size: 14px; margin-right: 10px; float:right; color: white;">@context.User.Identity.Name </h6>
@@ -20,8 +20,8 @@
     <LayoutContent Background="Background.Body">
         @Body
     </LayoutContent>
-    <LayoutFooter Style="background-color: #57024e;">
-        Footer
+    <LayoutFooter Style="background-color: #57024e; color: white; padding: 4px; font-size: 11px;">
+        Technikum Łączności i Multimediów Cyfrowych w Szczecinie
     </LayoutFooter>
 </Layout>
 
@@ -41,5 +41,6 @@
         var auth = (CustomAuthenticationStateProvider)authenticationProvider;
         await auth.UpdateAuthenticationStateAsync(null);
         StateHasChanged();
+        navigationManager.NavigateTo("login");
     }
 }

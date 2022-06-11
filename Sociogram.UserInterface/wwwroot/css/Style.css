@@ -75,3 +75,84 @@
 
 .NameOfStudent {
 }
+
+.IconHead {
+    font-size: 26px;
+    color: white;
+    margin-left: 10px;
+    float: left;
+}
+
+    .IconHead a {
+        color: white;
+    }
+        .IconHead a:hover {
+            color: darkcyan;
+        }
+
+.joinPanel{
+    border: black solid 3px;
+    padding: 15px;
+    margin: auto;
+    width: 54%;
+}
+
+.joinBtn {
+    text-align: center;
+    font-size: 24px;
+    border: #57024e dotted 2px;
+    border-radius: 15px;
+    color: #57024e;
+    font-weight: 700;
+    width: 190px;
+    margin-right: 6px;
+    margin-top: 4px;
+    float: right;
+}
+
+.joinTxt {
+    padding-top: 6px;
+    font-size: 21px;
+    float: left;
+    font-weight: 600;
+    margin-top: 4px;
+    margin-right: 5px;
+}
+
+@media (max-width:1210px) {
+    .joinPanel {
+        border: black solid 3px;
+        padding: 15px;
+        margin: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width:672px) {
+    .joinPanel {
+        border: black solid 3px;
+        padding: 15px;
+        margin: auto;
+        width: 100%;
+    }
+    .joinBtn {
+        text-align: center;
+        font-size: 24px;
+        border: #57024e dotted 2px;
+        border-radius: 15px;
+        color: #57024e;
+        font-weight: 700;
+        width: 100%;
+        margin: auto;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+    .joinTxt {
+        padding-top: 6px;
+        font-size: 24px;
+        width: 100%;
+        text-align: center;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+}

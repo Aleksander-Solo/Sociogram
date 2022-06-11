@@ -1,42 +1,84 @@
 ﻿@page "/newclass"
+@using Sociogram.DAL.Repositiores.Interfaces
+@using Sociogram.UserInterface.Auth
+@inject ITeacherService teacherService
+@inject AuthenticationStateProvider authenticationProvider
+@inject NavigationManager navigationManager
 
-<Card style="width: 469px; height: 880px; border: solid #57024e 2px; margin:auto; margin-top: 70px;">
+
+<Card style="width: 469px; min-height: 280px; border: solid #57024e 2px; margin:auto; margin-top: 70px; margin-bottom: 10px; display: block;">
         <CardHeader>
-            <h3 style="text-align: center;">Nowe Badanie</h3>
+            <h3 style="text-align: center;">Dodaj Klase</h3>
         </CardHeader>
     <CardBody>
-    <EditForm Model="Students" OnValidSubmit="@Post">
-            @for (int i = 0; i < Students.Count - 1; i++)
+            <EditForm Model="Student">
+                <p><Label>Podaj nazwe klasy:</Label><InputText @bind-Value="Name" placeholder="np. 3Te" style="margin-right: 3px; width: 50%; float: right; text-align: center;"></InputText></p>
+                <hr/>
+                <InputText @bind-Value="Student.Name" placeholder="Wpisz Imie i Nazwisko"></InputText>
+                <InputNumber @bind-Value="Student.Nr"></InputNumber>
+            </EditForm>
+            <hr />
+            @foreach(StudentConst student in Students)
             {
-                 <InputText @bind-Value="Students[i].Name" placeholder="Wpisz Imie" style="font-size:17px;"></InputText>
-                 <input @bind-value="Students[i].Nr" placeholder="Wpisz numer"  type="number" style="font-size:17px;"/>  
+                <p><h7>@(student.Name) - @(student.Nr) <Button Color="Color.Danger" Style="float: right;" onclick="@(() => Delete(student.Nr))">Usuń</Button></h7></p>
             }
-            <Button @onclick="AddStudent">Dodaj ucznia</Button>
-        <Button Color="Color.Primary" Type="ButtonType.Submit" style="float: right; margin: 5px; margin-top: 15px;">Utwórz</Button>
-    </EditForm>
-    <br />
+                <Button @onclick="AddStudent">Dodaj ucznia</Button>
+            @if(String.IsNullOrWhiteSpace(Name)){
+                <Tooltip style="float: right; margin: 5px; margin-top: 15px;" Text="Uzupełnij pole Nazwa klasy!">
+                    <Button Color="Color.Primary">Utwórz</Button>
+                </Tooltip>
+            }
+            else
+            {
+                <Button Color="Color.Primary" style="float: right; margin: 5px; margin-top: 15px;" @onclick="Post">Utwórz</Button>
+            }
     <br />
     <br />
     <br />
     <CardFooter>
-        <p>Po utworzeniu pokaże się kod dołączenia w poczekalni.</p>
+        <p style="text-align: center;">Po utworzeniu klasa będzie dostępna do wybrania w badaniu.</p>
     </CardFooter>
     </CardBody>
 </Card>
 @code {
+    public string Name { get; set; }
+    public StudentConst Student = new ();
     public List<StudentConst> Students { get; set; } = new List<StudentConst>();
 
     protected override void OnInitialized()
     {
-        Students.Add(new StudentConst { });
-        Console.WriteLine(Students[0]);
+        Student.Nr = 1;
     }
-    public void Post()
+    public async Task Post()
     {
-
+        if (!String.IsNullOrEmpty(Name))
+        {
+            var authstate = await ((CustomAuthenticationStateProvider)authenticationProvider).GetAuthenticationStateAsync();
+            var user = authstate.User;
+            string nameTeacher = user.Identity.Name;
+            if (!String.IsNullOrEmpty(nameTeacher))
+            {
+                teacherService.AddStudentConst(Students, Name, nameTeacher);
+                navigationManager.NavigateTo("");  
+            }
+        }
     }
     public void AddStudent()
     {
-        Students.Add(new StudentConst());
+        if (!String.IsNullOrEmpty(Student.Name))
+        {
+            int oldNr = Student.Nr;
+            Students.Add(Student);
+            Student = new StudentConst();
+            Student.Nr = oldNr + 1;
+        }
+    }
+    public void Delete(int nr)
+    {
+        Students.Remove(Students.First(x => x.Nr == nr));
+        StateHasChanged();
+    }
+    public void OnChangeName(){
+
     }
 }

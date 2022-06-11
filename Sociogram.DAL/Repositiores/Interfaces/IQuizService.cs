@@ -10,7 +10,6 @@ namespace Sociogram.DAL.Repositiores.Interfaces
     public interface IQuizService
     {
         public void Update(int id);
-        public void Create(Quiz quiz);
         public List<Quiz> GetQuizzes(string name);
         public void CreateQuiz(Quiz quiz, string nameTeacher);
     }

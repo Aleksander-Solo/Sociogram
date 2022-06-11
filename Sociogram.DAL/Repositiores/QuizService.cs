@@ -1,4 +1,5 @@
-﻿using Sociogram.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Sociogram.DAL.Entities;
 using Sociogram.DAL.Repositiores.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,25 +16,20 @@ namespace Sociogram.DAL.Repositiores
         {
             dbContext = _dbContext;
         }
-        public void Create(Quiz quiz)
-        {
-            quiz.CreatedDate = DateTime.Now;
-            dbContext.Quizzes.Add(quiz);
-            dbContext.SaveChanges();
-        }
 
         public void CreateQuiz(Quiz quiz, string nameTeacher)
         {
             Teacher teacher = dbContext.Teachers.FirstOrDefault(t => t.Name == nameTeacher);
             quiz.Teacher = teacher;
             quiz.CreatedDate = DateTime.Now;
+            quiz.Active = true;
             dbContext.Quizzes.Add(quiz);
             dbContext.SaveChanges();
         }
 
         public List<Quiz> GetQuizzes(string name)
         {
-            return dbContext.Quizzes.Where(x => x.Teacher.Name == name).ToList();
+            return dbContext.Quizzes.Where(x => x.Teacher.Name == name).Include(x => x.ClassS).ToList();
         }
 
         public void Update(int id)
