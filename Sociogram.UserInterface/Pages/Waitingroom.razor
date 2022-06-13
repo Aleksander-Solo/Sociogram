@@ -1,24 +1,51 @@
 ﻿@page "/waitingroom/{joinCode:int}"
+@using Sociogram.DAL.Repositiores.Interfaces
+@using System.Text.Json
+@using System.Text.Json.Serialization;
+@inject IQuizService quizService
+@inject IJSRuntime jSRuntime
 
 <Div Style="margin-top: 100px;">
-    <Div Class="joinCode">
-    @joinCode
+    <Div Style="float: left;">
+    <Div Class="info">
+        <h5>Informacje o badaniu:</h5>
+        <p>
+            <ol>
+                <li>Nazwa klasy: <span style="font-weight: 700;"> @quiz.ClassS.Name</span></li>
+                <li>Aktualnie aktywny: 
+                    @if (quiz.Active)
+                    {
+                        <span style="color: green; font-weight: 700;">@quiz.Active</span>
+                    }
+                    else
+                    {
+                        <span style="color: red; font-weight: 700;">@quiz.Active</span>
+                    }
+                </li>
+                <li>Badanie utworzone: <span style="font-weight: 700;"> @quiz.CreatedDate</span></li>
+                <li>Dezaktywować badanie: <Button Color="Color.Danger" Style="float: right;">Dezaktywuj</Button></li>
+            </ol>
+        </p>
     </Div>
-    <Row>
-        <Column ColumnSize="ColumnSize.Is12">
-            @foreach(Student student in Students)
+    <Div Class="joinCode">
+        @joinCode
+    </Div>
+    </Div>
+    <Div Class="students">
+            @foreach(Student student in quiz.Students)
             {
                 <Div Class="Student">
                     <Div Class="NameOfStudent">
                         @student.Name
                     </Div>
                     <Div Class="Icon">
-                        X
+                        <Button Color="Color.Danger">Usuń</Button>
                     </Div>
                 </Div>
             }
-        </Column>
-    </Row>
+    </Div>
+    <Div Class="diagram" id="mynetwork">
+    </Div>
 </Div>
 
 
@@ -26,12 +53,18 @@
     [Parameter]
     public int joinCode { get; set; }
 
-    List<Student> Students = new List<Student>();
-
-    protected override void OnInitialized()
+    Quiz quiz = new Quiz();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Students.Add(new Student { Name = "Jan Kowalski" });
-        Students.Add(new Student { Name = "Adam Piast" });
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, ReferenceHandler = ReferenceHandler.Preserve,
+                WriteIndented = true};
+        var students = JsonSerializer.Serialize(quiz.Students, options);
+        var students2 = JsonSerializer.Serialize(quiz.ClassS.StudentsConst, options);
+        await jSRuntime.InvokeVoidAsync("createDiagram", students, students2);
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
+        quiz = quizService.GetQuizze(joinCode);
     }
 }

@@ -1,16 +1,36 @@
 ﻿@page "/putName/{code:int}"
+@inject NavigationManager navigationManager
 
-<Card style="width: 489px; height: 380px; border: solid #57024e 2px; margin:auto; margin-top: 70px;"> 
-    <h2 style="margin: auto;">Wpisz imie</h2>
-    <hr/>
-    <input @bind-value="name" type="text"/>
-    <input @bind-value="nr" type="number"/>
+<Card style="width: 469px; height: 280px; border: solid #57024e 2px; margin:auto; margin-top: 70px;">
+        <CardHeader>
+            <h4 style="text-align: center;">Wpisz Imie , Nazwisko i Nr</h4>
+        </CardHeader>
+    <CardBody>
+        <input @bind-value="name" type="text" placeholder="Tu wpisz imie i nazwisko"/>
+        <input @bind-value="nr" type="number"/>
+    <br />
+        
+        <Button Color="Color.Primary" @onclick="Post" style="float: right; margin: 5px; margin-top: 15px;">Utwórz</Button>
+    <br />
+    <br />
+    <br />
+    <br />
+    <CardFooter>
+        <p style="text-align: center;">Po wpisaniu rozpoczniesz wypełnianie quizu</p>
+    </CardFooter>
+    </CardBody>
 </Card>
 
 @code {
+    
     [Parameter]
     public int code { get; set; }
 
     string name;
     int nr;
+
+    void Post()
+    {
+        navigationManager.NavigateTo($"question/{code}/{nr}?name={name}");
+    }
 }

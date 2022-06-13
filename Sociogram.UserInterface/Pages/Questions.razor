@@ -1,4 +1,11 @@
-﻿@page "/question"
+﻿@page "/question/{joinCode:int}/{nr:int}"
+@using Microsoft.AspNetCore.Http.Extensions
+@using Sociogram.DAL.Repositiores.Interfaces
+@using Microsoft.AspNetCore.WebUtilities
+@using Sociogram.UserInterface.Models
+@inject IQuizService quizService
+@inject NavigationManager navigationManager
+
 <Card style="width: 489px; height: 380px; border: solid #57024e 2px; margin:auto; margin-top: 70px;"> 
     <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged" RenderMode="TabsRenderMode.LazyLoad">
     <Items>
@@ -13,11 +20,17 @@
             <h4>Pytanie 1</h4><hr />
             <p>Z kim najbardziej chciałbyś być w pokoju.</p>
             <Validation Validator="@ValidationRule.IsSelected">
-            <Select TValue="int" Width="Width.Is75">
-                <SelectItem Value="1">Wybierz osobe</SelectItem>
-                <SelectItem Value="2">Aleksander Solich</SelectItem>
-                <SelectItem Value="3">Mateusz Piróg</SelectItem>
-                <SelectItem Value="4">Jakub Senisz</SelectItem>
+            <Select TValue="int" Width="Width.Is75" SelectedValueChanged="@OnSelectedValueChanged1">
+                <SelectItem Value="0">Wybierz osobe</SelectItem>
+                @foreach(StudentViewModel student in Students)
+                {
+                    if (student.IsChosen)
+                                {
+                                    <SelectItem Value="@(student.Nr)"  Hidden>@(student.Name)</SelectItem>
+                                }else{
+                                    <SelectItem Value="@(student.Nr)">@(student.Name)</SelectItem>
+                                } 
+                }
             </Select>
             </Validation>
             <Button Color="Color.Primary" Clicked="Next1" style="float: right; margin: 5px; margin-top: 15px;">Następne pytanie</Button>
@@ -28,11 +41,17 @@
             <h4>Pytanie 2</h4><hr />
             <p>Z kim najbardziej chciałbyś być w pokoju.</p>
             <Validation Validator="@ValidationRule.IsSelected">
-            <Select TValue="int" Width="Width.Is75">
-                <SelectItem Value="1">Wybierz osobe</SelectItem>
-                <SelectItem Value="2">Aleksander Solich</SelectItem>
-                <SelectItem Value="3">Mateusz Piróg</SelectItem>
-                <SelectItem Value="4">Jakub Senisz</SelectItem>
+            <Select TValue="int" Width="Width.Is75" SelectedValueChanged="@OnSelectedValueChanged2">
+                <SelectItem Value="0">Wybierz osobe</SelectItem>
+                @foreach(StudentViewModel student in Students)
+                {
+                                if (student.IsChosen)
+                                {
+                                    <SelectItem Value="@(student.Nr)"  Hidden>@(student.Name)</SelectItem>
+                                }else{
+                                    <SelectItem Value="@(student.Nr)">@(student.Name)</SelectItem>
+                                }
+                }
             </Select>
             </Validation>
             <Button Color="Color.Primary" Clicked="Next2" style="float: right; margin: 5px; margin-top: 15px;">Następne pytanie</Button>
@@ -44,11 +63,17 @@
             <hr />
             <p>Lorem ipsum bla bla vla kons hba asdf sdf.</p>
             <Validation Validator="@ValidationRule.IsSelected">
-            <Select TValue="int" Width="Width.Is75">
-                <SelectItem Value="1">Wybierz osobe</SelectItem>
-                <SelectItem Value="2">Two</SelectItem>
-                <SelectItem Value="3">Three</SelectItem>
-                <SelectItem Value="4">Four</SelectItem>
+            <Select TValue="int" Width="Width.Is75" SelectedValueChanged="@OnSelectedValueChanged3">
+                <SelectItem Value="0">Wybierz osobe</SelectItem>
+                @foreach(StudentViewModel student in Students)
+                {
+                    if (student.IsChosen)
+                    {
+                        <SelectItem Value="@(student.Nr)"  Hidden>@(student.Name)</SelectItem>
+                    }else{
+                        <SelectItem Value="@(student.Nr)">@(student.Name)</SelectItem>
+                    }
+                }
             </Select>
             </Validation>
             <Button Color="Color.Primary" Clicked="Next3" style="float: right; margin: 5px; margin-top: 15px;">Następne pytanie</Button>
@@ -90,12 +115,52 @@
     </Steps>
 </Card>
 @code{
+    [Parameter]
+    public int joinCode { get; set; }
+
+    [Parameter]
+    public int nr { get; set; }
+
     string selectedTab = "step1";
     string selectedStep = "step1";
 
     bool canSend = false;
 
     Validations validations;
+
+    public List<StudentViewModel> Students = new();
+
+    Student newStudent = new Student();
+
+    protected override void OnInitialized()
+    {
+        List<StudentConst> students = quizService.GetClassS(joinCode).StudentsConst;
+        foreach (StudentConst student in students)
+        {
+            Students.Add(new StudentViewModel { Name = student.Name, Nr = student.Nr });
+        }
+    }
+
+    Task OnSelectedValueChanged1( int value )
+    {
+        newStudent.FirstFriend = value;
+        Students.First(x => x.Nr == value).IsChosen = true;
+        return Task.CompletedTask;
+    }
+
+    Task OnSelectedValueChanged2( int value )
+    {
+        newStudent.SecontFriend = value;
+        Students.First(x => x.Nr == value).IsChosen = true;
+        return Task.CompletedTask;
+    }
+
+    Task OnSelectedValueChanged3( int value )
+    {
+        newStudent.ThirdFriend = value;
+        Students.First(x => x.Nr == value).IsChosen = true;
+        return Task.CompletedTask;
+    }
 
     private Task OnSelectedTabChanged( string name )
     {
@@ -130,7 +195,15 @@
 
     void Send()
     {
-        
+        newStudent.Nr = nr;
+
+        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("name", out var param))
+        {
+            newStudent.Name = param.First();
+        }
+        quizService.AddStudent(newStudent, joinCode);
     }
 
 }

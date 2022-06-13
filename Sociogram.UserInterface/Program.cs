@@ -1,19 +1,15 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Blazorise;
-using Blazorise.Material;
 using Blazorise.Icons.Material;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Sociogram.DAL;
-using Microsoft.EntityFrameworkCore;
-using Sociogram.DAL.Entities;
+using Blazorise.Material;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Sociogram.UserInterface.Auth;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Sociogram.DAL;
+using Sociogram.DAL.Entities;
 using Sociogram.DAL.Repositiores;
 using Sociogram.DAL.Repositiores.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using Sociogram.UserInterface.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +26,8 @@ builder.Services.AddTransient<IPasswordHasher<Teacher>, PasswordHasher<Teacher>>
 builder.Services.AddTransient<IQuizService, QuizService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
-builder.Services.AddScoped<AuthenticationStateProvider,CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
 
 builder.Services
     .AddBlazorise(options =>

@@ -44,7 +44,7 @@
                             <Button Color=Color.Primary @onclick="NewQuiz" Style="width: 100%; margin-bottom: 6px;">Nowe Badanie</Button>
                             @foreach(Quiz quiz in Quizzes)
                             {
-                                <h5>@quiz.ClassS.Name - @quiz.Active - @quiz.JoinCode <Button Color="Color.Info">Info</Button></h5>
+                                <h5>@quiz.ClassS.Name - @quiz.Active - @quiz.JoinCode <Button Color="Color.Info" @onclick="() => GetInfoQuiz(quiz.JoinCode)">Info</Button></h5>
                             }
                         </CardBody>
                     </Card>
@@ -65,16 +65,20 @@
         Quizzes = quizService.GetQuizzes(name);
     }
 
-    public void JoinToQuiz()
+    void JoinToQuiz()
     {
         navigationManager.NavigateTo($"putName/{code}");
     }
-    public void NewQuiz()
+    void NewQuiz()
     {
         navigationManager.NavigateTo("createQuiz");
     }
-    public void AddNewClass()
+    void AddNewClass()
     {
         navigationManager.NavigateTo("newclass");
+    }
+    void GetInfoQuiz(int joinCode)
+    {
+        navigationManager.NavigateTo($"waitingroom/{joinCode}");
     }
 }

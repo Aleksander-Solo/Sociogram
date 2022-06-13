@@ -1,9 +1,4 @@
 ﻿using Sociogram.DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sociogram.DAL.Repositiores.Interfaces
 {
@@ -11,6 +6,9 @@ namespace Sociogram.DAL.Repositiores.Interfaces
     {
         public void Update(int id);
         public List<Quiz> GetQuizzes(string name);
+        public Quiz GetQuizze(int joinCode);
         public void CreateQuiz(Quiz quiz, string nameTeacher);
+        public ClassS GetClassS(int joinCode);
+        public void AddStudent(Student student, int joinCode);
     }
 }

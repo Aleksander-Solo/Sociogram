@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sociogram.DAL.Entities;
 using Sociogram.DAL.Repositiores.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sociogram.DAL.Repositiores
 {
@@ -17,6 +12,15 @@ namespace Sociogram.DAL.Repositiores
             dbContext = _dbContext;
         }
 
+        public void AddStudent(Student student, int joinCode)
+        {
+            student.CreatedDate = DateTime.Now;
+            student.Quizzes = new List<Quiz>();
+            student.Quizzes.Add(dbContext.Quizzes.First(x => x.JoinCode == joinCode));
+            dbContext.Students.Add(student);
+            dbContext.SaveChanges();
+        }
+
         public void CreateQuiz(Quiz quiz, string nameTeacher)
         {
             Teacher teacher = dbContext.Teachers.FirstOrDefault(t => t.Name == nameTeacher);
@@ -25,6 +29,17 @@ namespace Sociogram.DAL.Repositiores
             quiz.Active = true;
             dbContext.Quizzes.Add(quiz);
             dbContext.SaveChanges();
+        }
+
+        public ClassS GetClassS(int joinCode)
+        {
+            int ClassSId = dbContext.Quizzes.FirstOrDefault(x => x.JoinCode == joinCode).ClassSId;
+            return dbContext.ClassS.Include(x => x.StudentsConst).FirstOrDefault(x => x.Id == ClassSId);
+        }
+
+        public Quiz GetQuizze(int joinCode)
+        {
+            return dbContext.Quizzes.Include(x => x.Students).Include(x => x.ClassS).ThenInclude(x => x.StudentsConst).First(x => x.JoinCode == joinCode);
         }
 
         public List<Quiz> GetQuizzes(string name)
